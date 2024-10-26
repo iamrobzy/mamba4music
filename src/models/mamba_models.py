@@ -22,6 +22,8 @@ from src.utilities.tokenization import FlexiPatchEmbed, FlexiPosEmbed, resample_
 from torch.cuda.amp import autocast
 import random
 
+from huggingface_hub import PyTorchModelHubMixin
+
 try:
     from mamba_ssm.ops.triton.layernorm import RMSNorm, layer_norm_fn, rms_norm_fn
 except ImportError:
@@ -190,7 +192,10 @@ class Namespace:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-class AudioMamba(nn.Module):
+class AudioMamba(nn.Module,
+                PyTorchModelHubMixin,
+                repo_url="https://huggingface.co/Robzy/audiomamba",
+                ):
     def __init__(self, 
                  spectrogram_size=(128, 1024),
                  patch_size=(16, 16),
